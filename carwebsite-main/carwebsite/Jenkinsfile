@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clone Repository') {
+            steps {
+                echo "Cloning GitHub repository..."
+                git 'https://github.com/giriprasanna7/website-hosting.git'
+            }
+        }
+
+        stage('Check Files') {
+            steps {
+                echo "Checking files in workspace..."
+                sh 'ls -la'
+            }
+        }
+
+        stage('Deploy Website') {
+            steps {
+                echo "Starting deployment..."
+
+                sh '''
+                chmod +x webserver.sh
+                ./webserver.sh
+                '''
+
+                echo "Deployment completed!"
+            }
+        }
+
+    }
+
+    post {
+
+        success {
+            echo "Website deployed successfully!"
+        }
+
+        failure {
+            echo "Deployment failed!"
+        }
+
+    }
+}
